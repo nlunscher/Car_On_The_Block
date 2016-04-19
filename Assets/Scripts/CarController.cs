@@ -9,6 +9,7 @@ public class CarController : MonoBehaviour {
 	public Text carText;
 	public Text consoleText;
 	public GameObject groundObject;
+	public int ROTATE_STEPS;
 
 	private Rigidbody rb;
 	private int numCollisions;
@@ -16,8 +17,7 @@ public class CarController : MonoBehaviour {
 
 	private TimeSpan BACKUP_TIME = TimeSpan.FromSeconds(3);
 	private DateTime backupStart;
-	private int ROTATE_STEPS = 90;
-	private int retateElapse;
+	private int rotateElapse;
 
 	// Use this for initialization
 	void Start () {
@@ -52,54 +52,80 @@ public class CarController : MonoBehaviour {
 
 	void state0()
 	{
-		float moveHoriz = 0;
-		float moveVert = 1;
+		// move forward
 
-		Vector3 move = new Vector3 (moveHoriz, 0.0f, moveVert);
-
-		rb.AddForce (move * speed);
+		moveCar (1);
 	}
 
 	void state1()
 	{
-		float moveHoriz = 0;
-		float moveVert = -1;
-
-		Vector3 move = new Vector3 (moveHoriz, 0.0f, moveVert);
-
-		rb.AddForce (move * 13);
+		// move backwards 
+		moveCar (-1);
 
 		DateTime current = DateTime.Now;
 		TimeSpan backupElaspse = current - backupStart;
 		print ("Backup Elapse: " + backupElaspse);
 
 		if (backupElaspse >= BACKUP_TIME) {
-			retateElapse = 0;
+			rotateElapse = 0;
 			state = 2;
 		}
 	}
 
 	void state2()
 	{
+		// rotate 90 degrees
+		print ("Entered State2");
+
 		float rotX = 0;
 		float rotY = -90.0f / ROTATE_STEPS;
 		float rotZ = 0;
 
+		print ("Rotation - X: " + rotX + " Y: " + rotY + " Z: " + rotZ);
 		transform.Rotate(new Vector3 (rotX, rotY, rotZ));
 
-		retateElapse += 1;
-		print ("Rotate Elapse: " + retateElapse);
+		rotateElapse += 1;
+		print ("Rotate Elapse: " + rotateElapse);
 
-		if (retateElapse >= ROTATE_STEPS) {
-			ROTATE_STEPS = 0;
+		if (rotateElapse >= ROTATE_STEPS) {
+			rotateElapse = 0;
 			state = 0;
 		}
+	}
+
+	Vector3 getForwardDirection()
+	{
+		float xang = (float)(transform.rotation.eulerAngles.x * Math.PI / 180);
+		float yang = (float)(transform.rotation.eulerAngles.y * Math.PI / 180);
+		float zang = (float)(transform.rotation.eulerAngles.z * Math.PI / 180);
+
+		//print ("X: " + xang + " Y: " + yang + " Z: " + zang);
+
+		float xdir = (float)(1*Math.Sin (yang) + 0*Math.Cos (yang));
+		float ydir = 0;
+		float zdir = (float)(1*Math.Cos (yang) - 0*Math.Sin (yang));
+		float mag = (float)Math.Sqrt (xdir * xdir + ydir * ydir + zdir * zdir);
+		xdir /= mag;
+		ydir /= mag;
+		zdir /= mag;
+		Vector3 direction = new Vector3 (xdir, ydir, zdir);
+
+		return direction;
+	}
+
+	void moveCar(float moveAmount)
+	{
+		Vector3 carDirection = getForwardDirection ();
+		Vector3 move = carDirection * moveAmount;
+
+		rb.AddForce (move * speed);
 	}
 
 	void printCarInfo()
 	{
 		string s = "Car Collisions: " + numCollisions + "\n";
-		s += "Car State: " + state;
+		s += "Car State: " + state + "\n";
+		s += "Car Direction: " + getForwardDirection ().ToString ();
 		carPrint (s);
 	}
 
@@ -108,8 +134,8 @@ public class CarController : MonoBehaviour {
 		carText.text = s;
 	}
 
-	void print(string s)
-	{
-		consoleText.text = s + "\n" + consoleText.text;
-	}
+	//void print(string s)
+	//{
+	//	consoleText.text = s + "\n" + consoleText.text;
+	//}
 }
