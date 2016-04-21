@@ -93,7 +93,7 @@ public class CarController : MonoBehaviour {
 		}
 	}
 
-	Vector3 getForwardDirection()
+	public Vector3 getForwardDirection()
 	{
 		float xang = (float)(transform.rotation.eulerAngles.x * Math.PI / 180);
 		float yang = (float)(transform.rotation.eulerAngles.y * Math.PI / 180);
@@ -111,6 +111,11 @@ public class CarController : MonoBehaviour {
 		Vector3 direction = new Vector3 (xdir, ydir, zdir);
 
 		return direction;
+	}
+
+	public Quaternion getCarRotation()
+	{
+		return transform.rotation;
 	}
 
 	void moveCar(float moveAmount)

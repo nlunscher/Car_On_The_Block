@@ -5,6 +5,7 @@ public class MainCameraController : MonoBehaviour {
 
 	public GameObject player;
 	public float speed;
+	public Camera overheadCamera;
 
 	private Vector3 offset;
 
@@ -16,7 +17,11 @@ public class MainCameraController : MonoBehaviour {
 	void LateUpdate () {
 		// moveWithPlayer();
 
-		moveCameraDirectly ();
+		// only move if this camera is enabled
+		if (overheadCamera.enabled)
+		{
+			moveCameraDirectly ();
+		}
 	}
 
 	void moveCameraDirectly()
