@@ -60,7 +60,7 @@ public class CarController : MonoBehaviour {
 	void state1()
 	{
 		// move backwards 
-		moveCar (-1);
+		moveCar (-1*(13/15.0f));
 
 		DateTime current = DateTime.Now;
 		TimeSpan backupElaspse = current - backupStart;

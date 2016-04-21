@@ -19,11 +19,12 @@ public class PlayerController : MonoBehaviour {
 
 	void FixedUpdate()
 	{
-		float moveHoriz = Input.GetAxis("Horizontal");
-		float moveVert = Input.GetAxis("Vertical");
+		// move object
+		//float moveHoriz = Input.GetAxis("Horizontal");
+		//float moveVert = Input.GetAxis("Vertical");
 
-		Vector3 move = new Vector3 (moveHoriz, 0.0f, moveVert);
+		//Vector3 move = new Vector3 (moveHoriz, 0.0f, moveVert);
 
-		rb.AddForce (move * speed);
+		//rb.AddForce (move * speed);
 	}
 }
